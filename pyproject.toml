@@ -1,0 +1,22 @@
+[project]
+name = "tg-auth"
+requires-python = ">=3.11"
+authors = [
+    {name = "Artemiev", email = "mixartemev@gmail.com"},
+]
+keywords = ["starlette", "fastapi", "telegram", "authentication", "backend", "auth"]
+description = "Authentication backend for Telegram Mini Apps on starlette/fastapi API"
+readme = "README.md"
+license = {text = "MIT"}
+dependencies = [
+    "aiogram",
+    "starlette",
+]
+version = "0.0.1"
+
+[project.urls]
+Homepage = "https://github.com/mixartemev/fastapi-tg-auth"
+Repository = "https://github.com/mixartemev/fastapi-tg-auth"
+
+[tool.setuptools]
+packages = ["tg_auth"]
