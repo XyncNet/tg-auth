@@ -1,4 +1,4 @@
-## Telegram Auth Backend for FastAPI
+## Telegram Auth Backend for FastAPI/Starlette
 
 ### INSTALL
 
@@ -32,4 +32,4 @@ Authorization: Tg user=%7B%22id%22%3A1038938370%2C%22first_name%22%3A%22Crypto%E
 ```
 
 ---
-Made with ❤ on top of the Starlette.
+Made with ❤ on top of the [X-Model](https://github.com/XyncNet/x-model) and [Aiogram](https://github.com/aiogram/aiogram).

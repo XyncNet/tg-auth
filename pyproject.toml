@@ -1,6 +1,6 @@
 [project]
 name = "tg-auth"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 authors = [
     {name = "Artemiev", email = "mixartemev@gmail.com"},
 ]
@@ -11,8 +11,9 @@ license = {text = "MIT"}
 dependencies = [
     "aiogram",
     "starlette",
+    "tortoise-api-model",
 ]
-version = "0.0.1"
+version = "0.0.2"
 
 [project.urls]
 Homepage = "https://github.com/mixartemev/fastapi-tg-auth"
