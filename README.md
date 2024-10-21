@@ -4,7 +4,7 @@
 
 In your FastAPI/Starlette app:
 ```bash
-pip install tg-auth
+pip install xtg-auth
 ```
 
 Add your Telegram Bot API Token to `.env` file as `TgBotToken`:

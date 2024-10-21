@@ -1,5 +1,5 @@
 [project]
-name = "tg-auth"
+name = "xtg-auth"
 requires-python = ">=3.12"
 authors = [
     {name = "Artemiev", email = "mixartemev@gmail.com"},
@@ -10,8 +10,7 @@ readme = "README.md"
 license = {text = "MIT"}
 dependencies = [
     "aiogram",
-    "starlette",
-    "tortoise-api-model",
+    "xn-auth",
 ]
 version = "0.0.2"
 

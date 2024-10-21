@@ -1,6 +1,6 @@
 from enum import IntEnum
 from tortoise import fields
-from tortoise_api_model import User as BaseUser
+from x_auth.model import User as BaseUser
 
 
 class UserStatus(IntEnum):  # accords with: aiogram.enums.chat_member_status.ChatMemberStatus
