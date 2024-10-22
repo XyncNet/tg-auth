@@ -8,15 +8,32 @@ keywords = ["starlette", "fastapi", "telegram", "authentication", "backend", "au
 description = "Authentication backend for Telegram Mini Apps on starlette/fastapi API"
 readme = "README.md"
 license = {text = "MIT"}
+dynamic = ["version"]
+
 dependencies = [
     "aiogram",
     "xn-auth",
 ]
-version = "0.0.2"
+[project.optional-dependencies]
+dev = [
+    "build",
+    "twine",
+]
 
 [project.urls]
-Homepage = "https://github.com/mixartemev/fastapi-tg-auth"
-Repository = "https://github.com/mixartemev/fastapi-tg-auth"
+Homepage = "https://github.com/XyncNet/tg-auth"
+Repository = "https://github.com/XyncNet/tg-auth"
+
+[build-system]
+requires = ["setuptools>=64", "setuptools-scm[toml]>=8"]
+build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 packages = ["tg_auth"]
+
+[tool.setuptools_scm]
+version_scheme = "python-simplified-semver" # if "feature" in `branch_name` SEMVER_MINOR++ else SEMVER_PATCH++
+local_scheme = "no-local-version"
+
+[tool.ruff]
+line-length = 120

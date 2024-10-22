@@ -1,7 +1,8 @@
 from aiogram.utils.auth_widget import check_signature
 from aiogram.utils.web_app import WebAppUser, WebAppInitData, safe_parse_webapp_init_data
 from pydantic import BaseModel
-from x_auth import Token, AuthException, AuthFailReason
+from x_auth import AuthException, AuthFailReason
+from x_auth.pydantic import Token
 from x_auth.router import AuthRouter
 
 from tg_auth import User, _twa2tok
