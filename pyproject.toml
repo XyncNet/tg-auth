@@ -17,6 +17,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "build",
+    "python-dotenv",
     "twine",
 ]
 
