@@ -4,7 +4,7 @@ repos:
   - id: tag
     name: tag
     ### make tag with next ver only if "fix" in commit_msg or starts with "feat"
-    entry: bash -c 'grep -e ^feat -e fix .git/COMMIT_EDITMSG && make patch || exit 0'
+    entry: bash -c 'grep -e "^feat:" -e "^fix:" .git/COMMIT_EDITMSG && make patch || exit 0'
     language: system
     verbose: true
     pass_filenames: false
