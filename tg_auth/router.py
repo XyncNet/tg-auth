@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from fastapi.responses import JSONResponse
 from aiogram.utils.auth_widget import check_signature
 from aiogram.utils.web_app import WebAppUser, WebAppInitData, safe_parse_webapp_init_data
 from pydantic import BaseModel
@@ -52,7 +53,10 @@ class TgRouter(AuthRouter):
         db_user: User = await user_upsert(twa_user, user_model=self.db_user_model)
         auth_user: AuthUser = db_user.get_auth()
         access_token = jwt_encode(auth_user, bot_token, expire)
-        return Token(access_token=access_token, user=auth_user)
+        token = Token(access_token=access_token, user=auth_user)
+        resp = JSONResponse(token.model_dump())
+        resp.set_cookie("access_token", token.access_token)
+        return resp
 
     # login for api endpoint
     async def tgd2tok(self, data: TgData) -> Token:  # widget
