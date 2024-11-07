@@ -1,5 +1,7 @@
 from enum import IntEnum
+
 from tortoise import fields
+from x_auth import AuthUser as BaseAuthUser
 from x_auth.models import User as BaseUser
 
 
@@ -10,6 +12,10 @@ class UserStatus(IntEnum):  # accords with: aiogram.enums.chat_member_status.Cha
     RESTRICTED = 2
     LEFT = 1
     KICKED = 0
+
+
+class AuthUser(BaseAuthUser):
+    status: UserStatus
 
 
 class Lang(IntEnum):

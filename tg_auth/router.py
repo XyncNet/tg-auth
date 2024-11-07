@@ -1,11 +1,12 @@
 from aiogram.utils.auth_widget import check_signature
 from aiogram.utils.web_app import WebAppUser, WebAppInitData, safe_parse_webapp_init_data
 from pydantic import BaseModel
-from x_auth import AuthException, AuthFailReason
-from x_auth.pydantic import Token
+
+# from tg_auth.backend import TgAuthBack
+from x_auth import AuthException, AuthFailReason  # , BearerSecurity, BearerModel
 from x_auth.router import AuthRouter
 
-from tg_auth import User, _twa2tok
+from tg_auth import User, _twa2tok, Token
 
 
 class TgData(BaseModel):
@@ -20,9 +21,9 @@ class TgData(BaseModel):
 
 class TgRouter(AuthRouter):
     def __init__(self, secret: str, db_user_model: type(User) = User):
-        super().__init__(secret, db_user_model)
-        self.routes["tg-token"] = self.tgd2tok, "POST"
-        self.routes["tga-token"] = self.tid2tok, "POST"
+        # scheme = BearerSecurity(BearerModel(scheme='tg'))
+        super().__init__(secret, db_user_model)  # , TgAuthBack(secret, scheme), scheme)
+        self.routes = {"tg-token": (self.tgd2tok, "POST"), "tga-token": (self.tid2tok, "POST")}
 
     # API ENDOINTS
     # login for api endpoint

@@ -1,18 +1,19 @@
 from aiogram.utils.web_app import WebAppInitData, safe_parse_webapp_init_data, WebAppUser
-from starlette.authentication import AuthenticationBackend, AuthCredentials, AuthenticationError
+from starlette.authentication import AuthCredentials
 from starlette.requests import HTTPConnection
-from x_auth.pydantic import AuthUser
+from x_auth import AuthException, AuthFailReason
+from x_auth.backend import AuthBackend
+
+from tg_auth.models import AuthUser
 
 
-class TgAuthBack(AuthenticationBackend):
-    def __init__(self, secret: str):
-        self.secret: str = secret
-
+class TgAuthBack(AuthBackend):
     async def authenticate(self, conn: HTTPConnection) -> tuple[AuthCredentials, AuthUser] | None:
+        if not (tg_init := await self.auth_scheme(conn)):
+            raise AuthException(AuthFailReason.header, "No Tg initData in Authorization header")
         try:
-            tg_init: str = conn.headers["Authorization"].replace('Tg ', '')
             waid: WebAppInitData = safe_parse_webapp_init_data(token=self.secret, init_data=tg_init)
             user: WebAppUser = waid.user
         except Exception as e:
-            raise AuthenticationError(e)
+            raise AuthException(AuthFailReason.header, e)
         return AuthCredentials(), AuthUser(id=user.id, username=user.username or user.first_name)
