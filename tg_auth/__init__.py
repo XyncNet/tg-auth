@@ -1,8 +1,5 @@
-from datetime import timedelta
-
 from aiogram.types import User as TgUser
 from aiogram.utils.web_app import WebAppUser
-from x_auth import jwt_encode
 from x_auth.pydantic import Token as BaseToken
 
 from tg_auth.models import User, Lang, UserStatus, AuthUser
@@ -27,10 +24,3 @@ async def user_upsert(u: TgUser | WebAppUser, status: UserStatus = None, user_mo
         "pic": pic,
     }
     return (await user_model.update_or_create(user_defaults, id=u.id))[0]
-
-
-async def _twa2tok(twa_user: WebAppUser, bot_token: str, expire: timedelta) -> Token:  # _common
-    db_user: User = await user_upsert(twa_user)
-    auth_user: AuthUser = db_user.get_auth()
-    access_token = jwt_encode(auth_user, bot_token, expire)
-    return Token(access_token=access_token, user=auth_user)

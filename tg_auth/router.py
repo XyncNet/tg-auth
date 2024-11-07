@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from aiogram.utils.auth_widget import check_signature
 from aiogram.utils.web_app import WebAppUser, WebAppInitData, safe_parse_webapp_init_data
 from pydantic import BaseModel
@@ -6,10 +8,10 @@ from tortoise import ConfigurationError
 from tg_auth.models import AuthUser
 
 # from tg_auth.backend import TgAuthBack
-from x_auth import AuthException, AuthFailReason  # , BearerSecurity, BearerModel
+from x_auth import AuthException, AuthFailReason, jwt_encode  # , BearerSecurity, BearerModel
 from x_auth.router import AuthRouter
 
-from tg_auth import User, _twa2tok, Token
+from tg_auth import User, Token, user_upsert
 
 
 class TgData(BaseModel):
@@ -46,16 +48,22 @@ class TgRouter(AuthRouter):
         }
 
     # API ENDOINTS
+    async def _twa2tok(self, twa_user: WebAppUser, bot_token: str, expire: timedelta) -> Token:  # _common
+        db_user: User = await user_upsert(twa_user, user_model=self.db_user_model)
+        auth_user: AuthUser = db_user.get_auth()
+        access_token = jwt_encode(auth_user, bot_token, expire)
+        return Token(access_token=access_token, user=auth_user)
+
     # login for api endpoint
     async def tgd2tok(self, data: TgData) -> Token:  # widget
         dct = {k: v for k, v in data.model_dump().items() if v is not None}
         if not check_signature(self.secret, dct.pop("hash"), **dct):
             raise AuthException(AuthFailReason.signature, "Tg initData invalid")
-        return await _twa2tok(WebAppUser(**dct), self.secret, expire=self.expires)
+        return await self._twa2tok(WebAppUser(**dct), self.secret, expire=self.expires)
 
     async def tid2tok(self, tid: str) -> Token:  # twa
         try:
             twaid: WebAppInitData = safe_parse_webapp_init_data(token=self.secret, init_data=tid)
         except ValueError:
             raise AuthException(AuthFailReason.signature, "Tg Initdata invalid")
-        return await _twa2tok(twaid.user, self.secret, expire=self.expires)
+        return await self._twa2tok(twaid.user, self.secret, expire=self.expires)
