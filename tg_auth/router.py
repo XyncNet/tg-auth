@@ -1,6 +1,9 @@
 from aiogram.utils.auth_widget import check_signature
 from aiogram.utils.web_app import WebAppUser, WebAppInitData, safe_parse_webapp_init_data
 from pydantic import BaseModel
+from tortoise import ConfigurationError
+
+from tg_auth.models import AuthUser
 
 # from tg_auth.backend import TgAuthBack
 from x_auth import AuthException, AuthFailReason  # , BearerSecurity, BearerModel
@@ -23,7 +26,24 @@ class TgRouter(AuthRouter):
     def __init__(self, secret: str, db_user_model: type(User) = User):
         # scheme = BearerSecurity(BearerModel(scheme='tg'))
         super().__init__(secret, db_user_model)  # , TgAuthBack(secret, scheme), scheme)
-        self.routes = {"tg-token": (self.tgd2tok, "POST"), "tga-token": (self.tid2tok, "POST")}
+
+        # api refresh token
+        # todo: can't inherit from parent because method in __init__ func
+        async def refresh(auth_user: AuthUser = self.depend.AUTHENTICATED) -> Token:
+            try:
+                db_user: User = await self.db_user_model[auth_user.id]
+                auth_user: AuthUser = db_user.get_auth()
+            except ConfigurationError:
+                raise AuthException(AuthFailReason.username, f"Not inicialized user model: {User})", 500)
+            except Exception:
+                raise AuthException(AuthFailReason.username, f"No user#{auth_user.id}({auth_user.username})", 404)
+            return self._user2tok(auth_user)
+
+        self.routes = {
+            "refresh": (refresh, "GET"),
+            "tg-token": (self.tgd2tok, "POST"),
+            "tga-token": (self.tid2tok, "POST"),
+        }
 
     # API ENDOINTS
     # login for api endpoint
