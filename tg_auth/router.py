@@ -37,7 +37,7 @@ class TgRouter(AuthRouter):
                 raise AuthException(AuthFailReason.username, f"Not inicialized user model: {User})", 500)
             except Exception:
                 raise AuthException(AuthFailReason.username, f"No user#{auth_user.id}({auth_user.username})", 404)
-            return await self._user2tok(auth_user, Token)
+            return self._user2tok(auth_user, Token)
 
         self.routes = {
             "refresh": (refresh, "GET"),
