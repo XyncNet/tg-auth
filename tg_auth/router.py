@@ -37,7 +37,7 @@ class TgRouter(AuthRouter):
                 raise AuthException(AuthFailReason.username, f"Not inicialized user model: {User})", 500)
             except Exception:
                 raise AuthException(AuthFailReason.username, f"No user#{auth_user.id}({auth_user.username})", 404)
-            return await self._user2tok(auth_user)
+            return await self._user2tok(auth_user, Token)
 
         self.routes = {
             "refresh": (refresh, "GET"),
@@ -49,7 +49,7 @@ class TgRouter(AuthRouter):
     async def _twa2tok(self, twa_user: WebAppUser) -> Token:  # _common
         db_user: User = await user_upsert(twa_user, user_model=self.db_user_model)
         auth_user: AuthUser = db_user.get_auth()
-        return self._user2tok(auth_user)
+        return self._user2tok(auth_user, Token)
 
     # login for api endpoint
     async def tgd2tok(self, data: TgData) -> Token:  # widget
