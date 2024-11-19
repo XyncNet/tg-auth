@@ -1,15 +1,15 @@
+from datetime import timedelta
+
 from aiogram.utils.auth_widget import check_signature
 from aiogram.utils.web_app import WebAppUser, WebAppInitData, safe_parse_webapp_init_data
 from pydantic import BaseModel
 from tortoise import ConfigurationError
-
-from tg_auth.models import AuthUser
-
-# from tg_auth.backend import TgAuthBack
 from x_auth import AuthException, AuthFailReason  # , BearerSecurity, BearerModel
 from x_auth.router import AuthRouter
 
 from tg_auth import User, Token, user_upsert
+from tg_auth.models import AuthUser
+# from tg_auth.backend import TgAuthBack
 
 
 class TgData(BaseModel):
@@ -23,9 +23,15 @@ class TgData(BaseModel):
 
 
 class TgRouter(AuthRouter):
-    def __init__(self, secret: str, db_user_model: type(User) = User, domain: str = None):
+    def __init__(
+        self,
+        secret: str,
+        domain: str = None,
+        db_user_model: type(User) = User,
+        expires: timedelta = timedelta(minutes=15),
+    ):
         # scheme = BearerSecurity(BearerModel(scheme='tg'))
-        super().__init__(secret, domain, db_user_model)  # , TgAuthBack(secret, scheme), scheme)
+        super().__init__(secret, domain, db_user_model, expires=expires)  # , TgAuthBack(secret, scheme), scheme)
 
         # api refresh token
         # todo: can't inherit from parent because method in __init__ func
