@@ -26,7 +26,7 @@ class TgRouter(AuthRouter):
     def __init__(
         self,
         secret: str,
-        domain: str = None,
+        domain: str,
         db_user_model: type(User) = User,
         expires: timedelta = timedelta(minutes=15),
     ):
