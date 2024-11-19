@@ -26,12 +26,11 @@ class TgRouter(AuthRouter):
     def __init__(
         self,
         secret: str,
-        domain: str,
         db_user_model: type(User) = User,
         expires: timedelta = timedelta(minutes=15),
     ):
         # scheme = BearerSecurity(BearerModel(scheme='tg'))
-        super().__init__(secret, domain, db_user_model, expires=expires)  # , TgAuthBack(secret, scheme), scheme)
+        super().__init__(secret, db_user_model, expires=expires)  # , TgAuthBack(secret, scheme), scheme)
 
         # api refresh token
         # todo: can't inherit from parent because method in __init__ func
