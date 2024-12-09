@@ -14,13 +14,14 @@ class UserStatus(IntEnum):  # accords with: aiogram.enums.chat_member_status.Cha
     KICKED = 0
 
 
-class AuthUser(BaseAuthUser):
-    status: UserStatus
-
-
 class Lang(IntEnum):
     ru = 1
     en = 2
+
+
+class AuthUser(BaseAuthUser):
+    status: UserStatus
+    lang: Lang = Lang.en
 
 
 class User(BaseUser):
