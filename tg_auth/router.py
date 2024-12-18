@@ -8,7 +8,9 @@ from x_auth import AuthException, AuthFailReason  # , BearerSecurity, BearerMode
 from x_auth.router import AuthRouter
 
 from tg_auth import User, Token, user_upsert
-from tg_auth.models import AuthUser
+from tg_auth.models import AuthUser, Lang
+
+
 # from tg_auth.backend import TgAuthBack
 
 
@@ -18,6 +20,7 @@ class TgData(BaseModel):
     last_name: str | None = None
     username: str | None = None
     photo_url: str | None = None
+    lang: Lang = Lang.en
     auth_date: int
     hash: str
 
