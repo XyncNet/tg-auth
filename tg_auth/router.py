@@ -50,7 +50,7 @@ class TgRouter(AuthRouter):
         self.routes = {
             "refresh": (refresh, "GET"),
             "tg-token": (self.tgd2tok, "POST"),
-            "tga-token": (self.tid2tok, "POST"),
+            "auth/tma": (self.tid2tok, "POST"),
         }
 
     # API ENDOINTS
